@@ -25,14 +25,16 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
-
-    
-
+    getAllUsers: builder.query({
+      query: () => "/auth/users",
+      providesTags: ["Auth"],
+    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useRegisterMutation,
-  useVerifyOtpMutation
+  useVerifyOtpMutation,
+  useGetAllUsersQuery
 } = authApi;

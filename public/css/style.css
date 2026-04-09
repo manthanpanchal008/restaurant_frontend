@@ -1,3 +1,62 @@
+/* 🌗 DARK MODE THEME SYSTEM */
+:root {
+    --bg-main: #ffffff;
+    --bg-card: #ffffff;
+    --text-main: #666666;
+    --text-title: #2b2b2b;
+    --border-color: rgba(0, 0, 0, .05);
+}
+
+[data-theme="dark"] {
+    --bg-main: #111111;
+    --bg-card: #1a1a1a;
+    --text-main: #b0b0b0;
+    --text-title: #ffffff;
+    --border-color: rgba(255, 255, 255, .1);
+}
+
+body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-main) !important;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-title) !important;
+}
+
+/* 🧭 Navbar Adjustments */
+[data-theme="dark"] .nav-bar, 
+[data-theme="dark"] .navbar {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+[data-theme="dark"] .nav-link,
+[data-theme="dark"] .navbar-brand h1 span.text-dark {
+    color: #ffffff !important;
+}
+
+/* 📦 Card & Component Adjustments */
+[data-theme="dark"] .service-item,
+[data-theme="dark"] .blog-item .blog-content,
+[data-theme="dark"] .team-item,
+[data-theme="dark"] .card,
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .bg-light {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .shadow-sm,
+[data-theme="dark"] .shadow {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.5) !important;
+}
+
 
 /*** Spinner Start ***/
 #spinner {

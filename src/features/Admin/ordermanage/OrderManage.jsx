@@ -36,41 +36,65 @@ const OrderManage = () => {
         <table className="table table-bordered text-center">
           <thead className="table-dark">
             <tr>
-              <th>User</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Address & Phone</th>
               <th>Items</th>
               <th>Total</th>
               <th>Status</th>
-              <th>Change</th>
+              <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
             {orders.map((order) => (
               <tr key={order._id}>
-                
+                {/* DATE */}
+                <td>
+                  {new Date(order.createdAt).toLocaleDateString()}
+                  <br />
+                  <small className="text-muted">
+                    {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </small>
+                </td>
+
                 {/* USER */}
                 <td>
-                  {order.user?.name}
+                  <strong>{order.user?.name}</strong>
                   <br />
                   <small>{order.user?.email}</small>
                 </td>
 
+                {/* ADDRESS & PHONE */}
+                <td className="text-start">
+                  <div className="small">
+                    <i className="fa fa-map-marker-alt text-danger me-1"></i>
+                    {order.address}
+                    <br />
+                    <i className="fa fa-map-pin text-primary me-1"></i>
+                    PIN: {order.pin || "N/A"}
+                    <br />
+                    <i className="fa fa-phone text-success me-1"></i>
+                    {order.phone || "N/A"}
+                  </div>
+                </td>
+
                 {/* ITEMS */}
-                <td>
+                <td className="text-start">
                   {order.items.map((item, i) => (
-                    <div key={i}>
-                      {item.name} x {item.qty}
+                    <div key={i} className="small border-bottom mb-1">
+                      {item.name} <span className="text-primary fw-bold">x {item.qty}</span>
                     </div>
                   ))}
                 </td>
 
                 {/* TOTAL */}
-                <td>₹{order.totalAmount}</td>
+                <td className="fw-bold">₹{order.totalAmount}</td>
 
                 {/* STATUS */}
                 <td>
                   <span className={`badge 
-                    ${order.status === "Pending" && "bg-warning"}
+                    ${order.status === "Pending" && "bg-warning text-dark"}
                     ${order.status === "Preparing" && "bg-info"}
                     ${order.status === "Delivered" && "bg-success"}
                     ${order.status === "Cancelled" && "bg-danger"}
@@ -82,7 +106,7 @@ const OrderManage = () => {
                 {/* CHANGE STATUS */}
                 <td>
                   <select
-                    className="form-select"
+                    className="form-select form-select-sm"
                     value={order.status}
                     onChange={(e) =>
                       handleStatusChange(order._id, e.target.value)
@@ -94,10 +118,10 @@ const OrderManage = () => {
                     <option>Cancelled</option>
                   </select>
                 </td>
-
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
     </div>

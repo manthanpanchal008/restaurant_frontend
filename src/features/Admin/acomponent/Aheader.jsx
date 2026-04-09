@@ -1,15 +1,20 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logoutUser } from "../../../slice/authSlice";
+import { toggleTheme, initTheme } from "../../../slice/themeSlice";
 import { toast } from "sonner";
-import Aheros from "./Aheros";
 
 function Aheader() {
-  const user = localStorage.getItem("user");
+  const user = useSelector((state) => state.auth.user);
+  const theme = useSelector((state) => state.theme.mode);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(initTheme());
+  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -18,210 +23,103 @@ function Aheader() {
   };
 
   return (
-    <div>
-    
-      <div className="container-fluid nav-bar">
-        <div className="container">
-          <nav className="navbar navbar-light navbar-expand-lg py-4">
-            {/* LOGO */}
-            <NavLink to="/dash" className="navbar-brand">
-              <h1 className="text-primary fw-bold mb-0">Dashboard</h1>
-            </NavLink>
+    <div className="container-fluid nav-bar shadow-sm bg-white">
+      <div className="container">
+        <nav className="navbar navbar-light navbar-expand-lg py-3">
+          {/* LOGO */}
+          <NavLink to="/dash" className="navbar-brand">
+            <h2 className="text-primary fw-bold mb-0">Admin<span className="text-dark">Panel</span></h2>
+          </NavLink>
 
-            {/* TOGGLER */}
-            <button
-              className="navbar-toggler py-2 px-3"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarCollapse"
-            >
-              <span className="fa fa-bars text-primary" />
-            </button>
+          {/* TOGGLER */}
+          <button
+            className="navbar-toggler py-2 px-3 border-0 shadow-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+          >
+            <span className="fa fa-bars text-primary" />
+          </button>
 
-            {/* NAVBAR */}
-            <div className="collapse navbar-collapse" id="navbarCollapse">
-              {/* NAV LINKS */}
-              <div className="navbar-nav mx-auto">
-                <NavLink to="/ordermanage" className="nav-item nav-link">
-                      Manage Order
-                </NavLink>
-                <div className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Services
-                  </span>
-                  <div className="dropdown-menu bg-light">
-                    <NavLink to="/servicemange" className="dropdown-item">
-                      Manage
-                    </NavLink>
-                    <NavLink to="/serviceadd" className="dropdown-item">
-                      Add Form
-                    </NavLink>
+          {/* NAVBAR */}
+          <div className="collapse navbar-collapse" id="navbarCollapse">
+            <div className="navbar-nav mx-auto gap-2">
+              <NavLink to="/dash" className="nav-item nav-link fw-semibold">Dashboard</NavLink>
+              <NavLink to="/ordermanage" className="nav-item nav-link fw-semibold">Orders</NavLink>
+              
+              <div className="nav-item dropdown">
+                <span className="nav-link dropdown-toggle fw-semibold" data-bs-toggle="dropdown" style={{ cursor: "pointer" }}>Content</span>
+                <div className="dropdown-menu shadow border-0 mt-2 p-3" style={{ minWidth: "250px" }}>
+                  <div className="mb-2">
+                    <h6 className="dropdown-header px-0 text-primary">Menu Items</h6>
+                    <NavLink to="/menumanage" className="dropdown-item rounded small">Manage Menu</NavLink>
+                    <NavLink to="/menuadd" className="dropdown-item rounded small">Add New Dish</NavLink>
+                  </div>
+                  <div className="mb-2">
+                    <h6 className="dropdown-header px-0 text-primary border-top pt-2">Blogs</h6>
+                    <NavLink to="/blogmanage" className="dropdown-item rounded small">Manage Blogs</NavLink>
+                    <NavLink to="/blogadd" className="dropdown-item rounded small">Write New Post</NavLink>
+                  </div>
+                  <div className="mb-2">
+                    <h6 className="dropdown-header px-0 text-primary border-top pt-2">Services</h6>
+                    <NavLink to="/servicemange" className="dropdown-item rounded small">Manage Services</NavLink>
+                    <NavLink to="/serviceadd" className="dropdown-item rounded small">Add New Service</NavLink>
+                  </div>
+                  <div className="mb-2">
+                    <h6 className="dropdown-header px-0 text-primary border-top pt-2">Events</h6>
+                    <NavLink to="/eventsmange" className="dropdown-item rounded small">Manage Events</NavLink>
+                    <NavLink to="/eventadd" className="dropdown-item rounded small">Add New Event</NavLink>
+                  </div>
+                  <div className="mb-0">
+                    <h6 className="dropdown-header px-0 text-primary border-top pt-2">Team</h6>
+                    <NavLink to="/teammanage" className="dropdown-item rounded small">Manage Members</NavLink>
+                    <NavLink to="/teamadd" className="dropdown-item rounded small">Add New Member</NavLink>
                   </div>
                 </div>
-
-
-
-                <div className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Events
-                  </span>
-                  <div className="dropdown-menu bg-light">
-                    <NavLink to="/eventsmange" className="dropdown-item">
-                      Manage
-                    </NavLink>
-                    <NavLink to="/eventadd" className="dropdown-item">
-                      Add Form
-                    </NavLink>
-                  </div>
-                </div>
-
-                <div className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Menu
-                  </span>
-                  <div className="dropdown-menu bg-light">
-                    <NavLink to="/menumanage" className="dropdown-item">
-                      Manage
-                    </NavLink>
-                    <NavLink to="/menuadd" className="dropdown-item">
-                      Add Form
-                    </NavLink>
-                  </div>
-                </div>
-
-                <div className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Blog
-                  </span>
-                  <div className="dropdown-menu bg-light">
-                    <NavLink to="/blogmanage" className="dropdown-item">
-                      Manage
-                    </NavLink>
-                    <NavLink to="/blogadd" className="dropdown-item">
-                      Add Form
-                    </NavLink>
-                  </div>
-                </div>
-
-                <div className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Team
-                  </span>
-                  <div className="dropdown-menu bg-light">
-                    <NavLink to="/teammanage" className="dropdown-item">
-                      Manage
-                    </NavLink>
-                    <NavLink to="/teamadd" className="dropdown-item">
-                      Add Form
-                    </NavLink>
-                  </div>
-                </div>
-
-                <div className="nav-item dropdown">
-                  <span
-                    className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    style={{ cursor: "pointer" }}
-                  >
-                    Pages
-                  </span>
-                  <div className="dropdown-menu bg-light">
-                    <NavLink to="/book" className="dropdown-item">
-                      Booking
-                    </NavLink>
-                    <NavLink to="/blog" className="dropdown-item">
-                      Our Blog
-                    </NavLink>
-                    <NavLink to="/team" className="dropdown-item">
-                      Our Team
-                    </NavLink>
-                    <NavLink to="/test" className="dropdown-item">
-                      Testimonial
-                    </NavLink>
-                  </div>
-                </div>
-
-                {/* ✅ MOBILE BUTTONS */}
-                {user ? (
-                  <div className="d-lg-none mt-3 px-3">
-                    <button
-                      onClick={handleLogout}
-                      className="btn btn-primary w-100 mb-2 rounded-pill"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                ) : (
-                  <div className="d-lg-none mt-3 px-3">
-                    <NavLink
-                      to="/register"
-                      className="btn btn-primary w-100 mb-2 rounded-pill"
-                    >
-                      Register
-                    </NavLink>
-
-                    <NavLink
-                      to="/login"
-                      className="btn btn-outline-primary w-100 rounded-pill"
-                    >
-                      Login
-                    </NavLink>
-                  </div>
-                )}
               </div>
 
-              {/* ✅ DESKTOP BUTTONS */}
+              <div className="nav-item dropdown">
+                <span className="nav-link dropdown-toggle fw-semibold" data-bs-toggle="dropdown" style={{ cursor: "pointer" }}>Settings</span>
+                <div className="dropdown-menu shadow border-0 mt-2 p-2">
+                  <NavLink to="/test" className="dropdown-item rounded">Testimonials</NavLink>
+                  <NavLink to="/book" className="dropdown-item rounded">Bookings</NavLink>
+                  <hr className="dropdown-divider opacity-10" />
+                  <NavLink to="/" className="dropdown-item rounded text-primary fw-bold">View Website</NavLink>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-flex align-items-center gap-4">
+              {/* 🌗 THEME TOGGLE */}
+              <button 
+                className="btn btn-link text-primary p-0 border-0 shadow-none" 
+                onClick={() => dispatch(toggleTheme())}
+                title="Toggle Theme"
+              >
+                <i className={`fas ${theme === 'dark' ? 'fa-sun text-warning' : 'fa-moon'} fs-5`}></i>
+
+              </button>
+
+              {/* AUTH */}
               {user ? (
-                <div className="d-none d-lg-flex gap-2">
-                  <button
-                    onClick={handleLogout}
-                    className="btn btn-primary py-2 px-4 rounded-pill"
-                  >
-                    Logout
-                  </button>
+                <div className="d-flex align-items-center gap-3">
+                   <div className="d-none d-xl-block text-end">
+                      <p className="mb-0 small fw-bold text-dark">{user.name}</p>
+                      <span className="text-muted" style={{ fontSize: '10px' }}>Administrator</span>
+                   </div>
+                   <button onClick={handleLogout} className="btn btn-primary px-4 rounded-pill btn-sm fw-bold shadow-sm">
+                      Logout
+                   </button>
                 </div>
               ) : (
-                <div className="d-none d-lg-flex gap-2">
-                  <NavLink
-                    to="/register"
-                    className="btn btn-primary py-2 px-4 rounded-pill"
-                  >
-                    Register
-                  </NavLink>
-
-                  <NavLink
-                    to="/login"
-                    className="btn btn-outline-primary py-2 px-4 rounded-pill"
-                  >
-                    Login
-                  </NavLink>
+                <div className="d-flex gap-2">
+                  <NavLink to="/login" className="btn btn-outline-primary px-4 rounded-pill btn-sm">Login</NavLink>
                 </div>
               )}
             </div>
-          </nav>
-        </div>
+          </div>
+        </nav>
       </div>
-      
     </div>
   );
 }

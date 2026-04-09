@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, clearCart, removeFromCart } from "../../../slice/cartSlice";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +12,13 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const user = useSelector((state) => state.auth.user);
   const [placeOrder, { isLoading }] = usePlaceOrderMutation();
-  const user = JSON.parse(localStorage.getItem("user")); 
 
+  // ✅ LOCAL STATE FOR SHIPPING
+  const [address, setAddress] = useState(user?.address || "");
+  const [pincode, setPincode] = useState(user?.pincode || "");
+  const [phone, setPhone] = useState(user?.phone || "");
 
   // 🧮 Calculations
   const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
@@ -26,37 +30,55 @@ const Cart = () => {
   const total = subtotal + tax;
 
   const handlePlaceOrder = async () => {
+    if (!user) {
+      toast.error("Please login to place an order 🔒");
+      navigate("/login");
+      return;
+    }
+
     if (cartItems.length === 0) {
       toast.error("Cart is empty ❌");
       return;
     }
-    console.log(user._id)
+
+    if (!address || !pincode || !phone) {
+      toast.error("Please fill all shipping details 🏠");
+      return;
+    }
+
     try {
       const orderData = {
         userId: user?._id,
-        items: cartItems,
+        items: cartItems.map(item => ({
+          productId: item._id,
+          name: item.name,
+          price: item.price,
+          qty: item.qty,
+          img: item.img
+        })),
         totalAmount: total,
-        address:user?.address, 
-        pin:user?.pincode,
+        address: address,
+        pin: pincode,
+        phone: phone,
         paymentMethod: "COD",
       };
 
-      await placeOrder(orderData).unwrap();
+      const result = await placeOrder(orderData).unwrap();
 
       toast.success("Order placed successfully 🎉");
 
-      dispatch(clearCart()); // ✅ clear redux cart
-      navigate("/"); // or success page
+      dispatch(clearCart());
+      // ✅ REDIRECT TO SUCCESS WITH DATA
+      navigate("/order-success", { state: { order: result.order } });
     } catch (err) {
       console.log(err);
-      toast.error("Order failed ❌");
+      toast.error(err?.data?.message || "Order failed ❌");
     }
   };
 
+
   return (
     <>
-      <Header />
-      <Heros name={"Checkout"} title={"Checkout"} />
       <div className="container my-5">
         <div className="row">
           {/* LEFT SIDE */}
@@ -132,14 +154,54 @@ const Cart = () => {
 
             {/* CONTINUE SHOPPING */}
             {cartItems.length > 0 && (
-              <button
-                className="btn btn-link mt-3"
-                onClick={() => navigate("/menu")}
-              >
-                ← Continue Shopping
-              </button>
+              <>
+                <button
+                  className="btn btn-link mt-3"
+                  onClick={() => navigate("/menu")}
+                >
+                  ← Continue Shopping
+                </button>
+
+                {/* ✅ SHIPPING FORM */}
+                <div className="card mt-4 shadow-sm border-0 p-4">
+                  <h4 className="mb-4">🏠 Shipping Information</h4>
+                  <div className="row g-3">
+                    <div className="col-md-12">
+                      <label className="form-label text-muted small uppercase">Full Address</label>
+                      <textarea
+                        className="form-control"
+                        rows="2"
+                        placeholder="Street, Landmark, City"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                      ></textarea>
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label text-muted small uppercase">Pincode</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="6-digit code"
+                        value={pincode}
+                        onChange={(e) => setPincode(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label text-muted small uppercase">Phone Number</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="10-digit number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
             )}
           </div>
+
 
           {/* RIGHT SIDE */}
           <div className="col-lg-4">

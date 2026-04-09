@@ -24,13 +24,17 @@ const Login = () => {
         password,
       }).unwrap();
   
-      // ✅ store user in redux
+      // ✅ store user and token in redux
       dispatch(
         setUser({
-          ...res.user,
-          role: res.user.role.toLowerCase(),
+          user: {
+            ...res.user,
+            role: res.user.role.toLowerCase(),
+          },
+          token: res.token,
         })
       );
+
   
       toast.success("Login successful ✅");
   

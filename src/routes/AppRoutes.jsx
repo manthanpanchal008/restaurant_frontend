@@ -31,6 +31,8 @@ import AdminRoute from "./AdminRoutes";
 import Profile from "../features/Website/Pages/Profile";
 import UserRoutes from "./UserRoutes";
 import MyOrders from "../features/Website/Pages/MyOrders";
+import OrderSuccess from "../features/Website/Pages/OrderSuccess";
+import BlogDetail from "../features/Website/Pages/BlogDetail";
 import WebsiteLayout from "./WebsiteLayout";
 import OrderManage from "../features/Admin/ordermanage/OrderManage";
 
@@ -47,6 +49,7 @@ const AppRoutes = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blogs />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/book" element={<Booking />} />
           <Route path="/team" element={<Team />} />
           <Route path="/test" element={<Testi />} />
@@ -56,6 +59,7 @@ const AppRoutes = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/myorders" element={<MyOrders />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
           </Route>
         </Route>
         <Route path="/register" element={<Register />} />
